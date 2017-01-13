@@ -3,6 +3,8 @@ import sys
 import numpy as np
 
 
+#inserted comment
+
 class Position:
     counter = 0
 

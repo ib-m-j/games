@@ -2,9 +2,8 @@ import board
 import sys
 import numpy as np
 
-
-#inserted comment
-
+#more commment
+#and one more
 class Position:
     counter = 0
 

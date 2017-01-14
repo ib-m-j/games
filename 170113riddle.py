@@ -14,12 +14,14 @@ if __name__ == '__main__':
 
     prev = 0
     cur = 0
+    cure = 0
     for i,v in enumerate(seq):
         if i >= 2:
-            prev = math.log(seq[i-1])
-            cur = math.log(seq[i])
-        print("{: >4d}: {:.3f}   {:.5f}".format(
-            i,cur,cur - prev))
+            prev = math.exp(seq[i-1])
+            cure = math.exp(seq[i])
+            cur = seq[i]
+        print("{: >4d}: {:.3f} {:.3f}   {:.10f}  {:.4f}".format(
+            i,cur,cure, cure - prev, math.log(i+1)+math.log(1.7810)))
 
 
     

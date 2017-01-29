@@ -71,6 +71,6 @@ if __name__ == '__main__':
 
 
     for (x,item) in distributions.items():
-        print(x, item.disp(18))
+        print(x, item.disp(16))
         
         

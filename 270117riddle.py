@@ -59,15 +59,18 @@ if __name__ == '__main__':
 
         for i in range(1, 2**(n-1) + 1):
             res = 0
-            fact = ncr(2*math.ceil(i/2), i)
             for j in range(math.ceil(i/2), 2**(n-2) + 1):
-                res = res + lastd.getValue(2*j)*ncr(2*j,i)*p**i*q**(2*j-i)
+                if j == math.ceil(i/2):
+                    fact = ncr(2*math.ceil(i/2), i)*p**i*q**(2*j-i)
+                else:
+                    fact = fact*2*(j+1)*(2*j+1)/(2*j-i+1)/(2*j-1+2)*q**2
+                res = res + lastd.getValue(2*j)*fact
                 
             d.setValue(2*i, res)
  
 
 
     for (x,item) in distributions.items():
-        print(x, item.disp(12))
+        print(x, item.disp(18))
         
         

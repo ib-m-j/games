@@ -6,7 +6,7 @@ nord2kl = hcp(north) >= 22 or
 (hcp(north) >= 21 and shape(north, any 5xxx + any 6xxx + any 7xxx)) or
 (hcp(north) >=20 and shape(north, any 6xxx + any 7xxx))
 
-southlong = control(south) >=3 and (
+southlong = control(south) >=3 and hcp(south)>=12 and (
 (shape(south, 6xxx) and top3(south,spades)>=2) or
 (shape(south, 7xxx) and top2(south,spades)>=1) or   
 (shape(south, x6xx) and top3(south,hearts)>=2) or
@@ -25,8 +25,8 @@ bekkasin = shape(north, x4xx + x5xx + x6xx + 5xxx + 6xxx) and hcp(north) >= 13 a
 
 
 
-#condition nordenut and southlong
+condition nordenut and southlong
 # condition nord2kl
 #condition nordenut and interference and sydinvitplus
 #condition nord2kl and interference
-condition  bekkasin
+#condition  bekkasin

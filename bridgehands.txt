@@ -23,10 +23,16 @@ sydinvitplus = hcp(south) >= 8
 bekkasin = shape(north, x4xx + x5xx + x6xx + 5xxx + 6xxx) and hcp(north) >= 13 and shape(south,x4xx + x5xx + 3xxx + 4xxx ) and hcp(south) >= 13
 
 
+minorfit = (clubs(north) + clubs(south) >= 8) or diamonds(north) + diamonds(south) >= 8
 
+omvendtminor = minorfit and hcp(north) >= 13 and hcp(south) >= 6
 
-condition nordenut and southlong
+weakenemy = hcp(east) <=6 and shape(east, any 6xxx) and hcp(west) <= 13
+
+#condition nordenut and southlong
 # condition nord2kl
 #condition nordenut and interference and sydinvitplus
 #condition nord2kl and interference
 #condition  bekkasin
+#condition omvendtminor or (nordenut and interference and sydinvitplus)
+condition weakenemy

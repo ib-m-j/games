@@ -35,11 +35,13 @@ def getFactors(n):
 
 
 class FactorSequence:
-    def __init__(self, n, start = []):
+    def __init__(self, n, distribution, start = []):
         self.limit = n
         self.start = start
         self.length = len(self.start)
         self.best = self.start
+        self.variants = None
+        self.distribution = distribution
 
     def legalNexts(self):
         if len(self.start) == 0:
@@ -56,15 +58,33 @@ class FactorSequence:
         
     def expand(self):
         for x in self.legalNexts():
-            if (self.length == 0):
-                print("level 0", x)
-            child = FactorSequence(self.limit, self.start + [x])
+            #if (self.length == 0):
+            #    print("level 0", x)
+            child = FactorSequence(self.limit, self.distribution, self.start + [x])
             child.expand()
             
-
-            if child.length > self.length:
+            if len(child.best) > len(self.best):
                 self.best = child.best
-                self.length = child.length
+                self.variants = [child.best]
+            elif len(child.best) == len(self.best):
+                    self.variants.append(child.best)
+
+            if len(child.best) in self.distribution:
+                self.distribution[len(child.best)].append(
+                    (self.start, child.best[-1]))
+            else:
+                self.distribution[len(child.best)] = [
+                    (self.start, child.best[-1])]
+            
+
+            #if child.length > self.length:
+            #    self.best = child.best
+            #    self.length = child.length
+            #elif child.length == self.length:
+            #    if self.best:
+            #        self.best = self.best.append(child.best)
+            #    else:
+            #        self.best = child.best
         
         return(self)
         
@@ -183,12 +203,30 @@ def findFactorFragments(n):
         print("result is", begin.start, begin.best)
     f.close()
 
+def findCoreFragments(n):
+    space = []
+    for maxValue in range(6,n):
+        distribution = {}
+        print("\nStarting: {}".format(maxValue))
+        #    begin = FactorSequence(maxValue, [])
+        #    begin.expand()
+        #    print("result for start {} is {}".format(entry, begin.best))
+        for entry in range(1, maxValue + 1):
+            begin = FactorSequence(maxValue, distribution, [entry])
+            begin.expand()
+            #print(
+            #    "result for start {} is {}, {}".format(
+            #        entry, begin.best, begin.variants))
+            
+        for (a,b) in distribution.items():
+            print(a,b)
+
 def testRestrictedSpace():
     findPrimes(100)
     print(findRestrictedSpace(100, 7))
 
 
 if __name__ == '__main__':
-    x = findFactorFragments(100)
-    
+    #x = findFactorFragments(100)
+    x = findCoreFragments(7)
     

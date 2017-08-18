@@ -49,11 +49,16 @@ class FactorSequence:
         else:
             beginWith = self.start[-1]
 
-        res = [
-            i*beginWith for i in range(2,self.limit // beginWith + 1)]
+        res =[]
+        i = 2
+        while i*beginWith <= self.limit:
+            res.append(i*beginWith)
+            i = i+1
+
         res.extend(getFactors(beginWith))
 
         res = list(set(res) - set(self.start))
+
         return res
         
     def expand(self):
@@ -69,12 +74,16 @@ class FactorSequence:
             elif len(child.best) == len(self.best):
                     self.variants.append(child.best)
 
+            
+            startEndId = (min(child.best[0], child.best[-1]),
+                          max(child.best[0],child.best[-1]))
+            startEndList = child.best
+            insert = (startEndId, startEndList)
             if len(child.best) in self.distribution:
-                self.distribution[len(child.best)].append(
-                    (self.start, child.best[-1]))
+                if not startEndId in self.distribution[len(child.best)]:
+                    self.distribution[len(child.best)].append(startEndId)
             else:
-                self.distribution[len(child.best)] = [
-                    (self.start, child.best[-1])]
+                self.distribution[len(child.best)] = [startEndId]
             
 
             #if child.length > self.length:
@@ -205,7 +214,7 @@ def findFactorFragments(n):
 
 def findCoreFragments(n):
     space = []
-    for maxValue in range(6,n):
+    for maxValue in range(2,n):
         distribution = {}
         print("\nStarting: {}".format(maxValue))
         #    begin = FactorSequence(maxValue, [])
@@ -218,8 +227,16 @@ def findCoreFragments(n):
             #    "result for start {} is {}, {}".format(
             #        entry, begin.best, begin.variants))
             
-        for (a,b) in distribution.items():
-            print(a,b)
+        reduced = {}
+        keys = list(distribution.keys())
+        keys.sort(reverse=True)
+        taken = set([])
+        for k  in keys:
+            reduced[k] = set(distribution[k]) - taken
+            taken = taken | reduced[k]
+            l = list(reduced[k])
+            l.sort()
+            print(k,l)
 
 def testRestrictedSpace():
     findPrimes(100)
@@ -228,5 +245,5 @@ def testRestrictedSpace():
 
 if __name__ == '__main__':
     #x = findFactorFragments(100)
-    x = findCoreFragments(7)
+    x = findCoreFragments(20)
     

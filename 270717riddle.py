@@ -35,11 +35,13 @@ def getFactors(n):
 
 
 class FactorSequence:
-    def __init__(self, n, start = []):
+    def __init__(self, n, distribution, start = []):
         self.limit = n
         self.start = start
         self.length = len(self.start)
         self.best = self.start
+        self.variants = None
+        self.distribution = distribution
 
     def legalNexts(self):
         if len(self.start) == 0:
@@ -47,24 +49,51 @@ class FactorSequence:
         else:
             beginWith = self.start[-1]
 
-        res = [
-            i*beginWith for i in range(2,self.limit // beginWith + 1)]
+        res =[]
+        i = 2
+        while i*beginWith <= self.limit:
+            res.append(i*beginWith)
+            i = i+1
+
         res.extend(getFactors(beginWith))
 
         res = list(set(res) - set(self.start))
+
         return res
         
     def expand(self):
         for x in self.legalNexts():
-            if (self.length == 0):
-                print("level 0", x)
-            child = FactorSequence(self.limit, self.start + [x])
+            #if (self.length == 0):
+            #    print("level 0", x)
+            child = FactorSequence(self.limit, self.distribution, self.start + [x])
             child.expand()
             
-
-            if child.length > self.length:
+            if len(child.best) > len(self.best):
                 self.best = child.best
-                self.length = child.length
+                self.variants = [child.best]
+            elif len(child.best) == len(self.best):
+                    self.variants.append(child.best)
+
+            
+            startEndId = (min(child.best[0], child.best[-1]),
+                          max(child.best[0],child.best[-1]))
+            startEndList = child.best
+            insert = (startEndId, startEndList)
+            if len(child.best) in self.distribution:
+                if not startEndId in self.distribution[len(child.best)]:
+                    self.distribution[len(child.best)].append(startEndId)
+            else:
+                self.distribution[len(child.best)] = [startEndId]
+            
+
+            #if child.length > self.length:
+            #    self.best = child.best
+            #    self.length = child.length
+            #elif child.length == self.length:
+            #    if self.best:
+            #        self.best = self.best.append(child.best)
+            #    else:
+            #        self.best = child.best
         
         return(self)
         
@@ -183,12 +212,38 @@ def findFactorFragments(n):
         print("result is", begin.start, begin.best)
     f.close()
 
+def findCoreFragments(n):
+    space = []
+    for maxValue in range(2,n):
+        distribution = {}
+        print("\nStarting: {}".format(maxValue))
+        #    begin = FactorSequence(maxValue, [])
+        #    begin.expand()
+        #    print("result for start {} is {}".format(entry, begin.best))
+        for entry in range(1, maxValue + 1):
+            begin = FactorSequence(maxValue, distribution, [entry])
+            begin.expand()
+            #print(
+            #    "result for start {} is {}, {}".format(
+            #        entry, begin.best, begin.variants))
+            
+        reduced = {}
+        keys = list(distribution.keys())
+        keys.sort(reverse=True)
+        taken = set([])
+        for k  in keys:
+            reduced[k] = set(distribution[k]) - taken
+            taken = taken | reduced[k]
+            l = list(reduced[k])
+            l.sort()
+            print(k,l)
+
 def testRestrictedSpace():
     findPrimes(100)
     print(findRestrictedSpace(100, 7))
 
 
 if __name__ == '__main__':
-    x = findFactorFragments(100)
-    
+    #x = findFactorFragments(100)
+    x = findCoreFragments(20)
     

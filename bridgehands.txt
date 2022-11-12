@@ -40,5 +40,5 @@ slams = hcp(east) + hcp(west) < 12
 #condition  bekkasin
 #condition omvendtminor or (nordenut and interference and sydinvitplus)
 #condition weakenemy
-#condition slams
-condition 1NTdefense
+condition slams
+#condition 1NTdefense

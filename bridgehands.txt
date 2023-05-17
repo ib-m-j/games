@@ -42,3 +42,4 @@ slams = hcp(east) + hcp(west) < 12
 #condition weakenemy
 condition slams
 #condition 1NTdefense
+#no real change
